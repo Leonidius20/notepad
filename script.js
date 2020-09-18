@@ -6,8 +6,9 @@ let currentNoteId = null;
 function saveCurrentNode() {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     if (currentNoteId === null) {
+        currentNoteId = notes.length;
         notes[notes.length] = {
-            id: notes.length,
+            id: currentNoteId,
             title: document.getElementById('titleBox').value,
             text: document.getElementById('textBox').value,
             date: 'currentDate',
@@ -78,4 +79,11 @@ function showNote(id) {
     const note = getNote(id);
     document.getElementById('titleBox').value = note.title;
     document.getElementById('textBox').value = note.text;
+}
+
+function newNote() {
+    saveCurrentNode();
+    currentNoteId = null;
+    document.getElementById('titleBox').value = '';
+    document.getElementById('textBox').value = '';
 }
