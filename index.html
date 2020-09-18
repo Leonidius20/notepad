@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Notepad</title>
+    <link rel="stylesheet" href="main.css"/>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="notes-list" onload="showNoteList()">
+      Here's where the notes list is going to be. This is a very long text, this is a very long text
+    </div>
+    <div id="textBoxContainer">
+      <input type="text" id="titleBox"/>
+      <textarea id="textBox"></textarea>
+      <button id="saveButton" onclick="saveCurrentNode()">Save</button>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,17 @@
+#notes-list {
+    float: left;
+    height: 100%;
+    width: 33%;
+    background-color: blue;
+}
+
+#extBoxContainer {
+    overflow: hidden;
+}
+
+#textBox {
+    float: right;
+    height: 100%;
+    width: 100%;
+    background-color: antiquewhite;
+}
