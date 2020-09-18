@@ -55,14 +55,16 @@ async function getNoteTitleCard(id, title, date, shortContent) {
     div.setAttribute('id', id);
 
     return div;*/
-    const div = document.createElement('div');
-    div.innerHTML = await getTemplatedElement('notes_list_item.html', {
+
+    const parser = new DOMParser();
+    const domString = await getTemplatedElement('notes_list_item.html', {
         id: id,
         title: title,
         date: date,
         content: shortContent,
     });
-    return div;
+    const html = parser.parseFromString(domString, 'text/html');
+    return html.body.firstChild;
 }
 
 function getNote(id) {
