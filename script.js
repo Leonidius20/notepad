@@ -3,6 +3,7 @@ window.onload = showNoteList;
 function saveCurrentNode() {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     notes[notes.length] = {
+        id: notes.length,
         title: document.getElementById('titleBox').value,
         text: document.getElementById('textBox').value,
         date: 'currentDate',
@@ -14,22 +15,32 @@ function saveCurrentNode() {
 
 function showNoteList() {
     const notes = JSON.parse(window.localStorage.getItem('notes') || []);
-    let string = '';
+    const notesList = document.getElementById('notes-list');
+    notesList.innerHTML = ''; // deleting existing notes
     for (let note of notes) {
-        string += getNoteTitleCard(note.title, note.date);
+        notesList.appendChild(getNoteTitleCard(note.id, note.title, note.date));
     }
-    document.getElementById('notes-list').innerHTML = string;
 }
 
-function getNoteTitleCard(title, date) {
-    return `<div>
-    ${title}
-    <br>
-    ${date}
-    <button>Del</button>
-    </div>`;
+function getNoteTitleCard(id, title, date) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(`${title}`));
+    div.appendChild(document.createElement('br'));
+    div.appendChild(document.createTextNode(`${date}`));
+
+    const delButton = document.createElement('button');
+    delButton.innerHTML = 'del';
+    delButton.onclick = () => deleteNote(id);
+
+    div.appendChild(delButton);
+
+    div.setAttribute('id', id);
+    return div;
 }
 
-function deleteNote(title) {
-    console.log("wanna delete node " + title);
+function deleteNote(id) {
+    let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
+    notes = notes.filter(note => note.id !== id);
+    window.localStorage.setItem('notes', JSON.stringify(notes));
+    showNoteList();
 }
