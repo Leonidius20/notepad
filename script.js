@@ -3,7 +3,7 @@ window.onload = showNoteList;
 // maybe we should take this variable outta here
 let currentNoteId = null;
 
-function saveCurrentNode() {
+async function saveCurrentNode() {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     if (currentNoteId === null) {
         currentNoteId = notes.length;
@@ -24,20 +24,20 @@ function saveCurrentNode() {
     }
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
-    showNoteList();
+    await showNoteList();
 }
 
-function showNoteList() {
+async function showNoteList() {
     const notes = JSON.parse(window.localStorage.getItem('notes') || []);
     const notesList = document.getElementById('notes-list');
     notesList.innerHTML = ''; // deleting existing notes
     for (let note of notes) {
-        notesList.appendChild(getNoteTitleCard(note.id, note.title, note.date));
+        notesList.appendChild(await getNoteTitleCard(note.id, note.title, note.date, note.text.slice(0, 20)));
     }
 }
 
-function getNoteTitleCard(id, title, date) {
-    const div = document.createElement('div');
+async function getNoteTitleCard(id, title, date, shortContent) {
+    /*const div = document.createElement('div');
     div.appendChild(document.createTextNode(`${title}`));
     div.appendChild(document.createElement('br'));
     div.appendChild(document.createTextNode(`${date}`));
@@ -54,6 +54,14 @@ function getNoteTitleCard(id, title, date) {
 
     div.setAttribute('id', id);
 
+    return div;*/
+    const div = document.createElement('div');
+    div.innerHTML = await getTemplatedElement('notes_list_item.html', {
+        id: id,
+        title: title,
+        date: date,
+        content: shortContent,
+    });
     return div;
 }
 
@@ -62,7 +70,7 @@ function getNote(id) {
     return notes.find(note => note.id === id);
 }
 
-function deleteNote(id) {
+async function deleteNote(id) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     notes = notes.filter(note => note.id !== id);
     window.localStorage.setItem('notes', JSON.stringify(notes));
@@ -71,7 +79,7 @@ function deleteNote(id) {
         document.getElementById('titleBox').value = '';
         document.getElementById('textBox').value = '';
     }
-    showNoteList();
+    await showNoteList();
 }
 
 function showNote(id) {
@@ -81,9 +89,25 @@ function showNote(id) {
     document.getElementById('textBox').value = note.text;
 }
 
-function newNote() {
-    saveCurrentNode();
+async function newNote() {
+    if (document.getElementById('titleBox').value !== ''
+        || document.getElementById('textBox').value !== '') {
+        await saveCurrentNode();
+    }
     currentNoteId = null;
     document.getElementById('titleBox').value = '';
     document.getElementById('textBox').value = '';
+}
+
+async function getTemplatedElement(name, replacements) {
+    let template = await fetchHtml(name);
+    for (const replacement in replacements) {
+        template = template.replace('${' + replacement + "}", replacements[replacement]);
+    }
+    return template;
+}
+
+async function fetchHtml(path) {
+    const response = await fetch(path);
+    return await response.text();
 }
