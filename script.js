@@ -11,14 +11,14 @@ async function saveCurrentNode() {
             id: currentNoteId,
             title: document.getElementById('titleBox').value,
             text: document.getElementById('textBox').value,
-            date: 'currentDate',
+            date: Date.now(),
         };
     } else {
         for (let i = 0, n = notes.length; i < n; i++) {
             if (notes[i].id === currentNoteId) {
                 notes[i].title = document.getElementById('titleBox').value;
                 notes[i].text = document.getElementById('textBox').value;
-                notes[i].date = 'newDate';
+                notes[i].date = Date.now();
             }
         }
     }
@@ -59,8 +59,16 @@ async function getNoteTitleCard(id, title, date, shortContent) {
     const parser = new DOMParser();
     const domString = await getTemplatedElement('notes_list_item.html', {
         id: id,
-        title: title,
-        date: date,
+        title: title === '' ? '<p class="text-muted">Untitled</p>' : title,
+        date: new Intl.DateTimeFormat(undefined, {
+            hour12: false,
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+        }).format(date),
         content: shortContent,
     });
     const html = parser.parseFromString(domString, 'text/html');
