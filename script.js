@@ -64,6 +64,10 @@ async function getNoteTitleCard(id, title, date, shortContent) {
         content: shortContent,
     });
     const html = parser.parseFromString(domString, 'text/html');
+    html.getElementById('delButton').onclick = () => {
+        deleteNote(id);
+        event.stopPropagation();
+    }
     return html.body.firstChild;
 }
 
@@ -73,6 +77,7 @@ function getNote(id) {
 }
 
 async function deleteNote(id) {
+    console.log('deleting a node ' + id);
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     notes = notes.filter(note => note.id !== id);
     window.localStorage.setItem('notes', JSON.stringify(notes));
