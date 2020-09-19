@@ -7,9 +7,6 @@ window.onload = async () => {
 // maybe we should take this variable outta here
 let currentNoteId = null;
 
-
-source.addEventListener('input', inputHandler);
-
 async function saveCurrentNode() {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     if (currentNoteId === null) {
@@ -66,7 +63,7 @@ async function getNoteTitleCard(id, title, date, shortContent) {
     const parser = new DOMParser();
     const domString = await getTemplatedElement('notes_list_item.html', {
         id: id,
-        title: title === '' ? '<p class="text-muted">Untitled</p>' : title,
+        title: title === '' ? '<p class="text-muted">Untitled</p>' : escapeHtml(title),
         date: new Intl.DateTimeFormat(undefined, {
             hour12: false,
             year: 'numeric',
@@ -132,4 +129,13 @@ async function getTemplatedElement(name, replacements) {
 async function fetchHtml(path) {
     const response = await fetch(path);
     return await response.text();
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
