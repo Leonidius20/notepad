@@ -1,7 +1,14 @@
-window.onload = showNoteList;
+window.onload = async () => {
+    await showNoteList();
+    document.getElementById('titleBox').addEventListener('input', saveCurrentNode);
+    document.getElementById('textBox').addEventListener('input', saveCurrentNode);
+}
 
 // maybe we should take this variable outta here
 let currentNoteId = null;
+
+
+source.addEventListener('input', inputHandler);
 
 async function saveCurrentNode() {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
