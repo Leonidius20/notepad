@@ -7,10 +7,23 @@ const idListItemMap = new Map();
 window.onload = async () => {
     listItemTemplate = await fetchHtml('notes_list_item.html');
     showNoteList();
+    onHashChange();
     document.getElementById('titleBox').addEventListener('input', saveCurrentNode);
     document.getElementById('textBox').addEventListener('input', saveCurrentNode);
     document.getElementById('titleBox').removeAttribute('readonly');
     document.getElementById('textBox').removeAttribute('readonly');
+}
+
+window.onhashchange = onHashChange;
+
+function onHashChange() {
+    const hash = window.location.hash.slice(1);
+    if (hash === '') {
+        if (currentNoteId !== null) { // there's a note open
+            clearEditor();            // closing the open note
+        } else return;
+    }
+    showNote(parseInt(hash, 10));
 }
 
 async function fetchHtml(path) {
@@ -58,9 +71,8 @@ function createItemListItem(note) {
 
     fillItemListItem(item, note);
 
-    item.getElementById('parentDiv').onclick = (event) => {
-        onNoteSelected(note.id);
-        event.stopPropagation();
+    item.getElementById('parentDiv').onclick = () => {
+        onNotesListItemClicked(note.id);
     };
 
     item.getElementById('delButton').onclick = (event) => {
@@ -101,13 +113,25 @@ function onDeleteButtonPressed(id) {
     notesList.removeChild(idListItemMap.get(id));
 }
 
-function onNoteSelected(id) {
+function onNotesListItemClicked(id) {
+    // this triggers onHashChange and showNote() is called
+    window.location.hash = id;
+}
+
+function showNote(id) {
+    const note = getNote(id);
+
+    if (note === undefined) {
+        clearEditor();
+        return;
+    }
+
     currentNoteId = id;
     idListItemMap.forEach((value, key) => {
         if (key === id) value.classList.add('active');
         else value.classList.remove('active');
     });
-    const note = getNote(id);
+
     document.getElementById('titleBox').value = note.title;
     document.getElementById('textBox').value = note.text;
 }
@@ -117,7 +141,15 @@ function onNewNoteButtonPressed() {
         || document.getElementById('textBox').value !== '') {
         saveCurrentNode();
     }
+    clearEditor();
+}
+
+function clearEditor() {
+    idListItemMap.forEach((item) => {
+        item.classList.remove('active');
+    });
     currentNoteId = null;
     document.getElementById('titleBox').value = '';
     document.getElementById('textBox').value = '';
+    window.location.hash = '';
 }

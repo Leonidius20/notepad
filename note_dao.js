@@ -20,7 +20,7 @@ function createNote(title, text) {
 }
 
 /**
- * Saves changes made to the note with a specified id
+ * Saves changes made to the note with the specified id
  * @param id id of the changed note
  * @param title new title of the note
  * @param text new contents of the note
@@ -49,9 +49,10 @@ function saveNote(id, title, text) {
 }
 
 /**
- * Finds and returns the note object with a specified id
+ * Finds and returns the note object with the specified id
  * @param id id of the note to return
- * @returns object note object
+ * @returns object note object if a note with such an id exists,
+ *          undefined otherwise
  */
 function getNote(id) {
     const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
@@ -59,7 +60,7 @@ function getNote(id) {
 }
 
 /**
- * Deletes the note with a specified id
+ * Deletes the note with the specified id
  * @param id
  */
 function deleteNote(id) {
