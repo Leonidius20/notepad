@@ -41,6 +41,7 @@ function saveCurrentNode() {
         currentNoteId = note.id;
 
         const element = createItemListItem(note);
+        element.classList.add('active');
         idListItemMap.set(note.id, element);
         document.getElementById('notes-list').appendChild(element);
     } else {
@@ -51,11 +52,10 @@ function saveCurrentNode() {
 }
 
 function showNoteList() {
-    const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
     const notesList = document.getElementById('notes-list');
     notesList.innerHTML = ''; // deleting existing notes
 
-    for (let note of notes) {
+    for (let note of getAllNotes()) {
         const element = createItemListItem(note);
         if (currentNoteId === note.id) {
             element.classList.add('active');
@@ -84,10 +84,10 @@ function createItemListItem(note) {
 }
 
 function fillItemListItem(element, note) {
-    element.querySelector('#title').innerText =
-        note.title === ''
-            ? '<p class="text-muted">Untitled</p>'
-            : note.title;
+    if (note.title === '') {
+        element.querySelector('#title').innerHTML = '<p class="text-muted">Untitled</p>';
+    } else element.querySelector('#title').innerText = note.title;
+
     element.querySelector('#date').innerText =
         new Intl.DateTimeFormat(undefined, {
             hour12: false,
@@ -103,10 +103,9 @@ function fillItemListItem(element, note) {
 
 function onDeleteButtonPressed(id) {
     deleteNote(id);
+
     if (id === currentNoteId) {
-        currentNoteId = null;
-        document.getElementById('titleBox').value = '';
-        document.getElementById('textBox').value = '';
+        clearEditor();
     }
 
     const notesList = document.getElementById('notes-list');

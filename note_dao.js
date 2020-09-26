@@ -8,13 +8,19 @@
  */
 function createNote(title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    const id = notes.length;
+
+    let id;
+    for (id = 0; ; id++) {
+        if (notes[id] == null) break;
+    }
+
     notes[id] = {
         id,
         title,
         text,
         date: Date.now()
     };
+
     window.localStorage.setItem('notes', JSON.stringify(notes));
     return notes[id];
 }
@@ -30,22 +36,15 @@ function saveNote(id, title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
 
     // trying to find a note with the specified id
-    let note;
-    for (let i = 0, n = notes.length; i < n; i++) {
-        if (notes[i].id === id) {
-            notes[i] = {
-                id,
-                title,
-                text,
-                date: Date.now()
-            };
-            note = notes[i];
-            break;
-        }
-    }
+    notes[id] = {
+        id,
+        title,
+        text,
+        date: Date.now()
+    };
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
-    return note;
+    return notes[id];
 }
 
 /**
@@ -56,7 +55,7 @@ function saveNote(id, title, text) {
  */
 function getNote(id) {
     const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    return notes.find(note => note.id === id);
+    return notes[id];
 }
 
 /**
@@ -65,6 +64,21 @@ function getNote(id) {
  */
 function deleteNote(id) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    notes = notes.filter(note => note.id !== id);
+    delete notes[id];
     window.localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+/**
+ * Retrieve all saved notes
+ * @returns array of notes
+ */
+function getAllNotes() {
+    const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
+    return notes
+        .filter(note => note !== null && note !== undefined)
+        .sort((note1, note2) => {
+            if (note1.date < note2.date) return -1;
+            if (note1.date > note2.date) return 1;
+            else return 0;
+        });
 }
