@@ -22,13 +22,19 @@ function saveCurrentNode() {
     const title = document.getElementById('titleBox').value;
     const text = document.getElementById('textBox').value;
 
+    let note;
     if (currentNoteId === null) {
-        currentNoteId = createNote(title, text);
-    } else {
-        saveNote(currentNoteId, title, text);
-    }
+        note = createNote(title, text);
+        currentNoteId = note.id;
 
-    showNoteList();
+        const element = createItemListItem(note);
+        idListItemMap.set(note.id, element);
+        document.getElementById('notes-list').appendChild(element);
+    } else {
+        note = saveNote(currentNoteId, title, text);
+        const element = idListItemMap.get(currentNoteId);
+        fillItemListItem(element, note);
+    }
 }
 
 function showNoteList() {
@@ -37,40 +43,50 @@ function showNoteList() {
     notesList.innerHTML = ''; // deleting existing notes
 
     for (let note of notes) {
-        const item = getTemplatedElement(listItemTemplate, {
-            id: note.id,
-            title: note.title === ''
-                ? '<p class="text-muted">Untitled</p>'
-                : escapeHtml(note.title),
-            date: new Intl.DateTimeFormat(undefined, {
-                hour12: false,
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-            }).format(note.date),
-            content: note.text.slice(0, 20),
-        });
-
-        item.getElementById('parentDiv').onclick = (event) => {
-            onNoteSelected(note.id);
-            event.stopPropagation();
-        };
-
-        item.getElementById('delButton').onclick = (event) => {
-            onDeleteButtonPressed(note.id);
-            event.stopPropagation();
-        }
-
-        const element = item.body.firstChild;
+        const element = createItemListItem(note);
         if (currentNoteId === note.id) {
             element.classList.add('active');
         }
         idListItemMap.set(note.id, element);
         notesList.appendChild(element);
     }
+}
+
+function createItemListItem(note) {
+    const parser = new DOMParser();
+    const item = parser.parseFromString(listItemTemplate, 'text/html');
+
+    fillItemListItem(item, note);
+
+    item.getElementById('parentDiv').onclick = (event) => {
+        onNoteSelected(note.id);
+        event.stopPropagation();
+    };
+
+    item.getElementById('delButton').onclick = (event) => {
+        onDeleteButtonPressed(note.id);
+        event.stopPropagation();
+    }
+
+    return item.body.firstChild;
+}
+
+function fillItemListItem(element, note) {
+    element.querySelector('#title').innerText =
+        note.title === ''
+            ? '<p class="text-muted">Untitled</p>'
+            : note.title;
+    element.querySelector('#date').innerText =
+        new Intl.DateTimeFormat(undefined, {
+            hour12: false,
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+        }).format(note.date);
+    element.querySelector('#content').innerText = note.text.slice(0, 20);
 }
 
 function onDeleteButtonPressed(id) {
@@ -104,13 +120,4 @@ function onNewNoteButtonPressed() {
     currentNoteId = null;
     document.getElementById('titleBox').value = '';
     document.getElementById('textBox').value = '';
-}
-
-function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }

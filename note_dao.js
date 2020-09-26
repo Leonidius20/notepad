@@ -4,7 +4,7 @@
  * Add a new note to the list of notes
  * @param title title of the note
  * @param text contents of the note
- * @returns {number} id of the saved note
+ * @returns saved note
  */
 function createNote(title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
@@ -16,7 +16,7 @@ function createNote(title, text) {
         date: Date.now()
     };
     window.localStorage.setItem('notes', JSON.stringify(notes));
-    return id;
+    return notes[id];
 }
 
 /**
@@ -24,11 +24,13 @@ function createNote(title, text) {
  * @param id id of the changed note
  * @param title new title of the note
  * @param text new contents of the note
+ * @returns updated note
  */
 function saveNote(id, title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
 
     // trying to find a note with the specified id
+    let note;
     for (let i = 0, n = notes.length; i < n; i++) {
         if (notes[i].id === id) {
             notes[i] = {
@@ -37,10 +39,13 @@ function saveNote(id, title, text) {
                 text,
                 date: Date.now()
             };
+            note = notes[i];
+            break;
         }
     }
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
+    return note;
 }
 
 /**
