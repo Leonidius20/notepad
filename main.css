@@ -4,12 +4,22 @@
 }
 
 #textBox {
-    float: right;
     height: 100%;
     width: 100%;
-    background-color: antiquewhite;
 }
 
 #titleBox {
     width: 100%;
+}
+
+form {
+    height: 100%;
+}
+
+#newNoteButton {
+    margin: 10px;
+}
+
+#notes-list {
+    margin: 10px;
 }
