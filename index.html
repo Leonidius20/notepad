@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="main.css"/>
 
     <script src="template.js"></script>
+    <script src="note_dao.js"></script>
     <script src="script.js"></script>
   </head>
   <body>
@@ -19,7 +20,7 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <button class="btn btn-outline-primary btn-block" id="newNoteButton" onclick="newNote()">+ New note</button>
+          <button class="btn btn-outline-primary btn-block" id="newNoteButton" onclick="onNewNoteButtonPressed()">+ New note</button>
           <div class="list-group" id="notes-list" onload="showNoteList()"></div>
         </div>
         <div class="col-8">
@@ -29,7 +30,6 @@
           <div class="form-group">
           <textarea class="form-control" id="textBox" readonly></textarea>
           </div>
-          <!-- <button id="saveButton" onclick="saveCurrentNode()">Save</button> -->
         </div>
       </div>
     </div>
