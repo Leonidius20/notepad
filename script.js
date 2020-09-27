@@ -136,10 +136,6 @@ function showNote(id) {
 }
 
 function onNewNoteButtonPressed() {
-    if (document.getElementById('titleBox').value !== ''
-        || document.getElementById('textBox').value !== '') {
-        saveCurrentNode();
-    }
     clearEditor();
 }
 
