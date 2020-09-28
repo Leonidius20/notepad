@@ -1,26 +1,8 @@
 .container {
-    background-color: rebeccapurple;
-    height: 100%;
-    /* https://stackoverflow.com/questions/1575141/how-to-make-a-div-100-height-of-the-browser-window */
+    height: 100vh;
 }
 
-#notes-list {
-    height: 100%;
-    background-color: blue;
-}
-
-#textBox {
-    height: 100%;
-    width: 100%;
-    margin: 10px;
-}
-
-#titleBox {
-    width: 100%;
-    margin: 10px;
-}
-
-form {
+.row, .col, .col-8 {
     height: 100%;
 }
 
@@ -30,9 +12,19 @@ form {
 
 #notes-list {
     width: 100%;
+    height: calc(100% - 70px);
+    margin: 10px;
+    overflow-y: scroll;
+}
+
+#titleBox {
+    width: 100%;
     margin: 10px;
 }
 
-#rightColumn {
-    height: 100%;
+#textBox {
+    width: 100%;
+    margin: 10px;
+    height: calc(100% - 70px);
+    resize: none;
 }

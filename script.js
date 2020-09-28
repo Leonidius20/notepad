@@ -8,10 +8,13 @@ window.onload = async () => {
     listItemTemplate = await fetchHtml('notes_list_item.html');
     showNoteList();
     onHashChange();
-    document.getElementById('titleBox').addEventListener('input', saveCurrentNode);
-    document.getElementById('textBox').addEventListener('input', saveCurrentNode);
-    document.getElementById('titleBox').removeAttribute('readonly');
-    document.getElementById('textBox').removeAttribute('readonly');
+
+    const textBox = document.getElementById('textBox');
+    const titleBox = document.getElementById('titleBox');
+    textBox.addEventListener('input', saveCurrentNode);
+    titleBox.addEventListener('input', saveCurrentNode);
+    textBox.removeAttribute('readonly');
+    titleBox.removeAttribute('readonly');
 }
 
 window.onhashchange = onHashChange;
