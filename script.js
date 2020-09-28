@@ -99,7 +99,6 @@ function fillItemListItem(element, note) {
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
-            second: 'numeric',
         }).format(note.date);
     element.querySelector('#content').innerText = note.text.slice(0, 20);
 }
