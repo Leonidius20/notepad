@@ -46,7 +46,7 @@ function saveCurrentNode() {
         const element = createItemListItem(note);
         element.classList.add('active');
         idListItemMap.set(note.id, element);
-        document.getElementById('notes-list').appendChild(element);
+        document.getElementById('notes-list').prepend(element);
     } else {
         note = saveNote(currentNoteId, title, text);
         const element = idListItemMap.get(currentNoteId);

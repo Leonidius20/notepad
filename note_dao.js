@@ -77,8 +77,8 @@ function getAllNotes() {
     return notes
         .filter(note => note !== null && note !== undefined)
         .sort((note1, note2) => {
-            if (note1.date < note2.date) return -1;
-            if (note1.date > note2.date) return 1;
+            if (note1.date > note2.date) return -1;
+            if (note1.date < note2.date) return 1;
             else return 0;
         });
 }
