@@ -2,6 +2,10 @@
     height: 100vh;
 }
 
+.row {
+    flex-wrap: nowrap;
+}
+
 .row, .col, .col-8 {
     height: 100%;
 }

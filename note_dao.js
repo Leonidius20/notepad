@@ -9,12 +9,13 @@
 function createNote(title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
 
-    let id;
-    for (id = 0; ; id++) {
-        if (notes[id] == null) break;
+    let id = generateID();
+    let index;
+    for (index = 0; ; index++) {
+        if (notes[index] == null) break;
     }
 
-    notes[id] = {
+    notes[index] = {
         id,
         title,
         text,
@@ -22,7 +23,7 @@ function createNote(title, text) {
     };
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
-    return notes[id];
+    return notes[index];
 }
 
 /**
@@ -36,7 +37,8 @@ function saveNote(id, title, text) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
 
     // trying to find a note with the specified id
-    notes[id] = {
+    let index = notes.findIndex((note) => note.id === id);
+    notes[index] = {
         id,
         title,
         text,
@@ -44,7 +46,7 @@ function saveNote(id, title, text) {
     };
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
-    return notes[id];
+    return notes[index];
 }
 
 /**
@@ -55,7 +57,7 @@ function saveNote(id, title, text) {
  */
 function getNote(id) {
     const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    return notes[id];
+    return notes.find((note) => note.id === id);
 }
 
 /**
@@ -64,7 +66,10 @@ function getNote(id) {
  */
 function deleteNote(id) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    delete notes[id];
+
+    let index = notes.findIndex((note) => note.id === id);
+    delete notes[index];
+
     window.localStorage.setItem('notes', JSON.stringify(notes));
 }
 
@@ -81,4 +86,13 @@ function getAllNotes() {
             if (note1.date < note2.date) return 1;
             else return 0;
         });
+}
+
+function generateID() {
+    let id = (Math.random() + 1).toString(36).substring(7);
+    const notes = getAllNotes();
+    while (notes.some((note) => note.id === id)) {
+        id = (Math.random() + 1).toString(36).substring(7);
+    }
+    return id;
 }

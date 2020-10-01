@@ -26,7 +26,7 @@ function onHashChange() {
             clearEditor();            // closing the open note
         } else return;
     }
-    showNote(parseInt(hash, 10));
+    showNote(hash);
 }
 
 async function fetchHtml(path) {
@@ -47,6 +47,7 @@ function saveCurrentNode() {
         element.classList.add('active');
         idListItemMap.set(note.id, element);
         document.getElementById('notes-list').prepend(element);
+        window.location.hash = currentNoteId;
     } else {
         note = saveNote(currentNoteId, title, text);
         const element = idListItemMap.get(currentNoteId);
