@@ -123,7 +123,7 @@ function onNotesListItemClicked(id) {
 function showNote(id) {
     const note = getNote(id);
 
-    if (note === undefined) {
+    if (note == null) {
         clearEditor();
         return;
     }
