@@ -101,7 +101,7 @@ function fillItemListItem(element, note) {
             hour: 'numeric',
             minute: 'numeric',
         }).format(note.date);
-    element.querySelector('#content').innerText = note.text.slice(0, 20);
+    element.querySelector('#content').innerText = note.text.slice(0, 20).replaceAll('\n', ' ');
 }
 
 function onDeleteButtonPressed(id) {
@@ -130,8 +130,12 @@ function showNote(id) {
 
     currentNoteId = id;
     idListItemMap.forEach((value, key) => {
-        if (key === id) value.classList.add('active');
-        else value.classList.remove('active');
+        if (key === id) {
+            highlightListItem(value);
+        }
+        else {
+            deHighlightListItem(value);
+        }
     });
 
     document.getElementById('titleBox').value = note.title;
@@ -144,10 +148,22 @@ function onNewNoteButtonPressed() {
 
 function clearEditor() {
     idListItemMap.forEach((item) => {
-        item.classList.remove('active');
+        deHighlightListItem(item);
     });
     currentNoteId = null;
     document.getElementById('titleBox').value = '';
     document.getElementById('textBox').value = '';
     window.location.hash = '';
+}
+
+function highlightListItem(item) {
+    item.classList.add('active');
+    item.querySelector('#delButton').classList.remove('btn-outline-primary');
+    item.querySelector('#delButton').classList.add('btn-primary');
+}
+
+function deHighlightListItem(item) {
+    item.classList.remove('active');
+    item.querySelector('#delButton').classList.remove('btn-primary');
+    item.querySelector('#delButton').classList.add('btn-outline-primary');
 }
