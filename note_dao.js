@@ -57,7 +57,7 @@ function saveNote(id, title, text) {
  */
 function getNote(id) {
     const notes = JSON.parse(window.localStorage.getItem('notes')) || [];
-    return notes.find((note) => note.id === id);
+    return notes.find((note) => note != null && note.id === id);
 }
 
 /**
