@@ -4,9 +4,10 @@
 
 .row {
     flex-wrap: nowrap;
+    width: 100%;
 }
 
-.row, .col, .col-8 {
+.row, .col-4, .col-8 {
     height: 100%;
 }
 
