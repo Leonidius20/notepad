@@ -67,7 +67,7 @@ function getNote(id) {
 function deleteNote(id) {
     let notes = JSON.parse(window.localStorage.getItem('notes')) || [];
 
-    let index = notes.findIndex((note) => note.id === id);
+    let index = notes.findIndex((note) => note != null && note.id === id);
     delete notes[index];
 
     window.localStorage.setItem('notes', JSON.stringify(notes));
